@@ -93,38 +93,66 @@ let average = 0;
 let greatest = ['', 0];
 let least = ['', 999999999999];
 let netSum = 0;
-let netChange = [];
 
-// net total
+// Incrementing
 for (let i = 0; i < finances.length; i++) {
-  total += finances[i][1];
-}
 
-// greatest & least change
-for (let i = 0; i < finances.length; i++) {
+  // Sets values to be compared
   let current = finances[i];
+  let previous = finances[i - 1];
+
+  // Keep rolling monetary total
+  total += current[1];
+
+  // Checks that 'previous' exists to prevent error
   if (i >= 1) {
-    let previous = finances[i - 1];
-    netChange.push(current[1] - previous[1]);
-    if (i >= 1) {
-      if (current[1] > greatest[1]) {
-        greatest = current;
-      }
-      if (current[1] < least[1]) {
-        least = current;
-      }
+
+    // Figures swing
+    let change = current[1] - previous[1];
+
+    // Adds swing to the rolling total of monthly differences
+    netSum += change;
+
+    // Compares current monthly difference to what's stored and changes stored value as needed
+    if (change > greatest[1]) {
+      greatest[0] = current[0];
+      greatest[1] = change;
+    }
+    if (change < least[1]) {
+      least[0] = current[0];
+      least[1] = change;
     }
   }
-}
+};
 
-// average of changes
-for (let i = 0; i < netChange.length; i++) {
-  netSum += netChange[i];
-}
+// Decrementing
+for (let i = finances.length - 1; i >= 0; i--) {
+  let current = finances[i];
+  let previous = finances[i - 1];
+  total += current[1];
+  if (i >= 1) {
+    let change = current[1] - previous[1];
+    netSum += change;
+    if (change > greatest[1]) {
+      greatest[0] = current[0];
+      greatest[1] = change;
+    }
+    if (change < least[1]) {
+      least[0] = current[0];
+      least[1] = change;
+    }
+  }
+};
 
-average = Math.round((netSum / netChange.length) * 100) / 100;
+average = (netSum / (finances.length - 1)).toFixed(2);
 
-// compile
-let analysis = 'Financial Analysis' + '\n--------------------' + '\nTotal months: ' + months + '\nTotal: ' + total + '\nAverage change: ' + average + '\nGreatest increase: ' + greatest[0] + ': $' + greatest[1] + '\nGreatest decrease: ' + least[0] + ': $' + least[1];
+// compile data
+let analysis = 'Financial Analysis' +
+  '\n--------------------' +
+  '\nTotal months: ' + months +
+  '\nTotal: ' + total +
+  '\nAverage change: ' + average +
+  '\nGreatest increase: ' + greatest[0] + ': $' + greatest[1] +
+  '\nGreatest decrease: ' + least[0] + ': $' + least[1];
 
 console.log(analysis);
