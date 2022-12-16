@@ -124,7 +124,7 @@ for (let i = 0; i < netChange.length; i++) {
 
 average = Math.round((netSum / netChange.length) * 100) / 100;
 
-// compile analysis
+// compile
 let analysis = 'Financial Analysis' + '\n--------------------' + '\nTotal months: ' + months + '\nTotal: ' + total + '\nAverage change: ' + average + '\nGreatest increase: ' + greatest[0] + ': $' + greatest[1] + '\nGreatest decrease: ' + least[0] + ': $' + least[1];
 
 console.log(analysis);
